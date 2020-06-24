@@ -1,0 +1,133 @@
+信息系统与数据库技术练习16答题卡
+
+班级：     信管一班
+姓名：     李明杰
+学号：     20190307130
+
+注：请将答案放置在序号下方。*/
+
+（一）
+1.
+CREATE DATABASE Storage
+
+
+2.
+USE Storage
+
+
+3.
+CREATE TABLE Product
+(
+Pid CHAR(4) CONSTRAINT pk_Pid PRIMARY KEY,
+Pname VARCHAR(40)NOT NULL ,
+Specs VARCHAR(40)NOT NULL ,
+Weight DECIMAL (16,2) ,
+Price MONEY CONSTRAINT ck_Price  CHECK(Price>0 AND Price<99999),
+Code CHAR(15) ,
+Cid CHAR(4) ,
+)
+
+
+
+4.
+INSERT Product(Pid,Pname,Specs,Price,Cid,Code)
+VALUES('PDF2','商品2','EQ2080','10000','CT01','202006011234567')
+
+
+5.
+INSERT Product(Pid,Pname, Specs,Price,Cid,Code)
+VALUES('PD03','商品3','EQ2081','123456','CT02','202006011234568')
+
+
+6.
+ALTER TABLE Product
+ADD CONSTRAINT ck_Weight CHECK(Weight>=0)
+
+7.
+UPDATE Product
+SET Pid='PD02'
+WHERE Weight=123456
+
+8.
+UPDATE Product
+SET Pid='PD02'
+WHERE Weight=-100
+
+9.
+CREATE TABLE WP
+(
+Wid CHAR(4) ,
+Pid CHAR(4) CONSTRAINT Fk_wp FOREIGN KEY REFERENCES Product,
+Note Text ,
+Hazard VARCHAR(16) CONSTRAINT ck_Hazard CHECK (Hazard IN('爆炸品','液化气体','易燃液体','易燃固体','一般物品')),
+CONSTRAINT Pk_wp PRIMARY KEY(Wid,Pid) 
+)
+
+10.
+INSERT WP
+VALUES('WD04','PD02',NULL,'易燃液体')
+
+
+11.
+INSERT WP
+VALUES('WD05','PD02',NULL,'压缩气体')
+
+12.
+INSERT WP
+VALUES('WD06','PD12',NULL,'液化气体')
+
+13.
+CREATE TABLE Warehouse
+(
+Wid CHAR(4) PRIMARY KEY,
+Wname VARCHAR(40),
+Area Decimal(20,3),
+MaxStock Decimal(20,3),
+ParentWid CHAR(4) FOREIGN KEY REFERENCES Warehouse
+)
+
+14.
+INSERT Warehouse
+VALUES('WD','云海仓库',10000,10000, NULL),
+('WD04','云1#仓库',3000,3000,'WD'),
+('WD05','云2#仓库',3200,3200,'WD')
+
+
+15.
+INSERT Warehouse
+VALUES('WD06','云3#仓库',2700,2700,'WD0')
+
+
+16.
+ALTER TABLE WP
+ADD CONSTRAINT FK_WP_WH FOREIGN KEY(Wid) REFERENCES Warehouse
+
+
+17.
+DELETE Warehouse
+WHERE Wid='WD04'
+
+18.
+ALTER TABLE WP
+DROP CONSTRAINT FK_WP_WH
+
+19.
+ALTER TABLE WP
+ADD CONSTRAINT FK_WP_WH FOREIGN KEY(Wid) REFERENCES Warehouse
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+20.
+SELECT * FROM WP
+SELECT * FROM Warehouse
+
+
+21.
+UPDATE Warehouse
+SET Wid='WD04'
+WHERE Wid='WD01'
+
+
+22.
+DELETE Warehouse
+WHERE Wid='WD01'
